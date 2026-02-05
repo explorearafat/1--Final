@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Flow Chat</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="profile-page">
+        <!-- Header -->
+        <header class="profile-header">
+            <a href="chat.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>My Profile</h1>
+            <button class="icon-btn" onclick="saveProfile()">
+                <i class="fas fa-save"></i>
+            </button>
+        </header>
+        
+        <!-- Profile Content -->
+        <main class="profile-content">
+            <!-- Avatar Section -->
+            <section class="avatar-section">
+                <div class="avatar-wrapper">
+                    <img src="" alt="Profile" id="profileAvatar" class="profile-avatar">
+                    <button class="avatar-edit" onclick="changeAvatar()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <h2 id="profileName">Loading...</h2>
+                <p id="profileUsername" class="username">@username</p>
+            </section>
+            
+            <!-- Profile Form -->
+            <form id="profileForm" class="profile-form">
+                <div class="form-section">
+                    <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Choose a username" required>
+                        <small>This will be used for @mentions</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" placeholder="Tell something about yourself" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3><i class="fas fa-shield-alt"></i> Account Security</h3>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email Address</strong>
+                                <p id="userEmail">Loading...</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-text" onclick="changeEmail()">Change</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div>
+                                <strong>Phone Number</strong>
+                                <p id="userPhone">Not set</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-text" onclick="changePhone()">Add</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <i class="fas fa-key"></i>
+                            <div>
+                                <strong>Password</strong>
+                                <p>••••••••</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-text" onclick="showChangePassword()">Change</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <strong>Two-Factor Authentication</strong>
+                                <p>Add extra security</p>
+                            </div>
+                        </div>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="twoFactorToggle">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <i class="fas fa-comment"></i>
+                            <div>
+                                <strong>Message Notifications</strong>
+                                <p>Get notified for new messages</p>
+                            </div>
+                        </div>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="messageNotifications" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <i class="fas fa-user-plus"></i>
+                            <div>
+                                <strong>Contact Requests</strong>
+                                <p>Notify when someone adds you</p>
+                            </div>
+                        </div>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="contactNotifications" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='chat.html'">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </main>
+        
+        <!-- Change Password Modal -->
+        <div class="modal" id="passwordModal">
+            <div class="modal-content">
+                <!-- Password change form loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+    
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDz4_d-NU_fLDsaAMBwnJVPuzoaxqCp-VY",
+            authDomain: "flow-d0eb2.firebaseapp.com",
+            projectId: "flow-d0eb2",
+            storageBucket: "flow-d0eb2.firebasestorage.app",
+            messagingSenderId: "489057415403",
+            appId: "1:489057415403:web:a96ff07768596644c70eae",
+            measurementId: "G-N0HXLKSED2"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        
+        // Check authentication
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                loadProfile(user);
+            }
+        });
+        
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveProfile();
+        });
+    </script>
+</body>
+</html>

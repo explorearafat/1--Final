@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Chat - Professional Messaging</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00a884">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-header">
+            <div class="logo">
+                <i class="fas fa-comments"></i>
+                <h1>Flow Chat</h1>
+            </div>
+            <p class="tagline">Professional Messaging & Collaboration</p>
+        </div>
+        
+        <div class="landing-content">
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure Messaging</h3>
+                    <p>End-to-end encrypted conversations</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Team Collaboration</h3>
+                    <p>Work together seamlessly</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Fast & Reliable</h3>
+                    <p>Real-time messaging</p>
+                </div>
+            </div>
+            
+            <div class="auth-options">
+                <h2>Welcome to Flow Chat</h2>
+                <div class="button-group">
+                    <a href="login.html" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    <a href="signup.html" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </a>
+                </div>
+                <div class="pwa-prompt">
+                    <button onclick="installPWA()" class="btn btn-pwa">
+                        <i class="fas fa-download"></i> Install App
+                    </button>
+                    <p class="pwa-hint">For better experience, install our PWA</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/pwa.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDz4_d-NU_fLDsaAMBwnJVPuzoaxqCp-VY",
+            authDomain: "flow-d0eb2.firebaseapp.com",
+            projectId: "flow-d0eb2",
+            storageBucket: "flow-d0eb2.firebasestorage.app",
+            messagingSenderId: "489057415403",
+            appId: "1:489057415403:web:a96ff07768596644c70eae",
+            measurementId: "G-N0HXLKSED2"
+        };
+
+        // Check if user is already logged in
+        firebase.initializeApp(firebaseConfig);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                window.location.href = "chat.html";
+            }
+        });
+
+        async function installPWA() {
+            if (window.deferredPrompt) {
+                await window.deferredPrompt.prompt();
+                const { outcome } = await window.deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast('App installed successfully!');
+                }
+                window.deferredPrompt = null;
+            } else {
+                showToast('Your browser doesn\'t support PWA installation');
+            }
+        }
+    </script>
+</body>
+</html>

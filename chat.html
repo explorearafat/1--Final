@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Flow Chat</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app-container" id="appContainer">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Header -->
+            <header class="sidebar-header">
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <img src="" alt="Profile" class="user-avatar" id="userAvatar">
+                    <div class="user-info">
+                        <h3 id="userName">Loading...</h3>
+                        <p id="userStatus">Online</p>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <!-- User Menu Dropdown -->
+                <div class="user-menu" id="userMenu">
+                    <a href="profile.html" class="menu-item">
+                        <i class="fas fa-user-edit"></i> Edit Profile
+                    </a>
+                    <a href="settings.html" class="menu-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <div class="menu-divider"></div>
+                    <button class="menu-item logout" onclick="signOut()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="showNewChat()" title="New Chat">
+                        <i class="fas fa-comment-medical"></i>
+                    </button>
+                    <button class="icon-btn" onclick="toggleSearch()" title="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Search Bar -->
+            <div class="search-bar" id="searchBar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search chats...">
+                <button class="icon-btn" onclick="toggleSearch()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Chat List -->
+            <div class="chat-list" id="chatList">
+                <!-- Chats will be loaded here -->
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-item active" onclick="showChats()">
+                    <i class="fas fa-comments"></i>
+                    <span>Chats</span>
+                </button>
+                <button class="nav-item" onclick="showContacts()">
+                    <i class="fas fa-users"></i>
+                    <span>Contacts</span>
+                </button>
+                <button class="nav-item" onclick="showSettings()">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area" id="chatArea">
+            <!-- Chat Header -->
+            <header class="chat-header" id="chatHeader">
+                <button class="back-btn" onclick="hideChatArea()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                
+                <div class="chat-partner" id="chatPartner">
+                    <div class="default-chat">
+                        <i class="fas fa-comments"></i>
+                        <h2>Select a chat</h2>
+                        <p>Start a conversation</p>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Messages will be loaded here -->
+            </div>
+            
+            <!-- Message Input -->
+            <div class="message-input-container" id="messageInput">
+                <div class="input-tools">
+                    <button class="tool-btn" onclick="attachFile()">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="tool-btn" onclick="showEmojiPicker()">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                </div>
+                
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageText" 
+                        placeholder="Type a message..." 
+                        rows="1"
+                        oninput="autoResize(this)"
+                        onkeydown="handleMessageKeydown(event)"
+                    ></textarea>
+                </div>
+                
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Chat Modal -->
+    <div class="modal" id="newChatModal">
+        <div class="modal-content">
+            <!-- Modal content loaded by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDz4_d-NU_fLDsaAMBwnJVPuzoaxqCp-VY",
+            authDomain: "flow-d0eb2.firebaseapp.com",
+            projectId: "flow-d0eb2",
+            storageBucket: "flow-d0eb2.firebasestorage.app",
+            messagingSenderId: "489057415403",
+            appId: "1:489057415403:web:a96ff07768596644c70eae",
+            measurementId: "G-N0HXLKSED2"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        
+        // Check authentication
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                initChatApp(user);
+            }
+        });
+        
+        function showSettings() {
+            window.location.href = "settings.html";
+        }
+        
+        function hideChatArea() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('chatArea').classList.remove('active');
+                document.getElementById('sidebar').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

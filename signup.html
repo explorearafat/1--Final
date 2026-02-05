@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Flow Chat</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-header">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="logo">
+                <i class="fas fa-comments"></i>
+                <h1>Flow Chat</h1>
+            </div>
+        </div>
+        
+        <div class="auth-container">
+            <h2>Create Your Account</h2>
+            
+            <!-- Signup Steps -->
+            <div class="signup-steps" id="signupSteps">
+                <!-- Steps will be loaded by JavaScript -->
+            </div>
+            
+            <div class="error-message" id="authError"></div>
+            
+            <!-- Step Content -->
+            <div id="stepContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDz4_d-NU_fLDsaAMBwnJVPuzoaxqCp-VY",
+            authDomain: "flow-d0eb2.firebasestorage.app",
+            projectId: "flow-d0eb2",
+            storageBucket: "flow-d0eb2.firebasestorage.app",
+            messagingSenderId: "489057415403",
+            appId: "1:489057415403:web:a96ff07768596644c70eae",
+            measurementId: "G-N0HXLKSED2"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        
+        // Initialize signup steps
+        window.addEventListener('DOMContentLoaded', () => {
+            initSignupSteps();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Flow Chat</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="settings-page">
+        <!-- Header -->
+        <header class="settings-header">
+            <a href="chat.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>Settings</h1>
+        </header>
+        
+        <!-- Settings Content -->
+        <main class="settings-content">
+            <!-- App Section -->
+            <section class="settings-section">
+                <h2><i class="fas fa-mobile-alt"></i> App</h2>
+                
+                <div class="setting-item" onclick="installPWA()">
+                    <div class="setting-info">
+                        <i class="fas fa-download"></i>
+                        <div>
+                            <strong>Install PWA</strong>
+                            <p>Install Flow Chat as app</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-palette"></i>
+                        <div>
+                            <strong>Theme</strong>
+                            <p>Dark mode / Light mode</p>
+                        </div>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="themeToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-language"></i>
+                        <div>
+                            <strong>Language</strong>
+                            <p>English (US)</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </section>
+            
+            <!-- Privacy & Security Section -->
+            <section class="settings-section">
+                <h2><i class="fas fa-shield-alt"></i> Privacy & Security</h2>
+                
+                <div class="setting-item" onclick="showActiveSessions()">
+                    <div class="setting-info">
+                        <i class="fas fa-laptop"></i>
+                        <div>
+                            <strong>Where You're Logged In</strong>
+                            <p>Manage active sessions</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="setting-item" onclick="showBlockedUsers()">
+                    <div class="setting-info">
+                        <i class="fas fa-ban"></i>
+                        <div>
+                            <strong>Blocked Users</strong>
+                            <p>Manage blocked contacts</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <strong>Last Seen & Online</strong>
+                            <p>Who can see your status</p>
+                        </div>
+                    </div>
+                    <select class="setting-select" id="privacySelect">
+                        <option value="everyone">Everyone</option>
+                        <option value="contacts">My Contacts</option>
+                        <option value="nobody">Nobody</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-user-circle"></i>
+                        <div>
+                            <strong>Profile Photo</strong>
+                            <p>Who can see your photo</p>
+                        </div>
+                    </div>
+                    <select class="setting-select" id="photoPrivacy">
+                        <option value="everyone">Everyone</option>
+                        <option value="contacts">My Contacts</option>
+                        <option value="nobody">Nobody</option>
+                    </select>
+                </div>
+            </section>
+            
+            <!-- Notifications Section -->
+            <section class="settings-section">
+                <h2><i class="fas fa-bell"></i> Notifications</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-comment"></i>
+                        <div>
+                            <strong>Message Notifications</strong>
+                            <p>Sound, vibration, popup</p>
+                        </div>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="messageNotify" checked>
+                        <span class="toggle-slider"></span>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-volume-up"></i>
+                        <div>
+                            <strong>Notification Sound</strong>
+                            <p>Play sound for notifications</p>
+                        </div>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-vibrate"></i>
+                        <div>
+                            <strong>Vibration</strong>
+                            <p>Vibrate for notifications</p>
+                        </div>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="vibrationToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Storage & Data Section -->
+            <section class="settings-section">
+                <h2><i class="fas fa-database"></i> Storage & Data</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <i class="fas fa-wifi"></i>
+                        <div>
+                            <strong>Media Auto-Download</strong>
+                            <p>Photos, audio, documents</p>
+                        </div>
+                    </div>
+                    <select class="setting-select" id="autoDownload">
+                        <option value="wifi">Wi-Fi only</option>
+                        <option value="always">Always</option>
+                        <option value="never">Never</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item" onclick="clearChatHistory()">
+                    <div class="setting-info">
+                        <i class="fas fa-trash"></i>
+                        <div>
+                            <strong>Clear Chat History</strong>
+                            <p>Delete all messages</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="setting-item" onclick="exportChatData()">
+                    <div class="setting-info">
+                        <i class="fas fa-file-export"></i>
+                        <div>
+                            <strong>Export Chat Data</strong>
+                            <p>Download your conversations</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </section>
+            
+            <!-- Account Section -->
+            <section class="settings-section">
+                <h2><i class="fas fa-user"></i> Account</h2>
+                
+                <div class="setting-item" onclick="window.location.href='profile.html'">
+                    <div class="setting-info">
+                        <i class="fas fa-user-edit"></i>
+                        <div>
+                            <strong>Edit Profile</strong>
+                            <p>Update your information</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="setting-item" onclick="changePassword()">
+                    <div class="setting-info">
+                        <i class="fas fa-key"></i>
+                        <div>
+                            <strong>Change Password</strong>
+                            <p>Update your password</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="setting-item" onclick="deleteAccount()">
+                    <div class="setting-info">
+                        <i class="fas fa-user-slash"></i>
+                        <div>
+                            <strong>Delete Account</strong>
+                            <p>Permanently delete your account</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </section>
+            
+            <!-- Logout Button -->
+            <div class="logout-section">
+                <button class="btn btn-logout" onclick="signOut()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Active Sessions Modal -->
+    <div class="modal" id="sessionsModal">
+        <div class="modal-content">
+            <!-- Sessions will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/settings.js"></script>
+    
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDz4_d-NU_fLDsaAMBwnJVPuzoaxqCp-VY",
+            authDomain: "flow-d0eb2.firebaseapp.com",
+            projectId: "flow-d0eb2",
+            storageBucket: "flow-d0eb2.firebasestorage.app",
+            messagingSenderId: "489057415403",
+            appId: "1:489057415403:web:a96ff07768596644c70eae",
+            measurementId: "G-N0HXLKSED2"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        
+        // Check authentication
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                loadSettings(user);
+            }
+        });
+        
+        async function installPWA() {
+            if (window.deferredPrompt) {
+                await window.deferredPrompt.prompt();
+                const { outcome } = await window.deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast('App installed successfully!');
+                }
+                window.deferredPrompt = null;
+            } else {
+                showToast('App is already installed or not supported');
+            }
+        }
+        
+        function showActiveSessions() {
+            // This will show sessions with device name, IP, user agent, time, location
+            loadActiveSessions();
+        }
+    </script>
+</body>
+</html>
